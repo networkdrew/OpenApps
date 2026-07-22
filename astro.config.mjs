@@ -10,12 +10,14 @@ export default defineConfig({
   site: SITE_URL,
   output: "static",
   integrations: [react(), sitemap()],
-  // OpenNotes ships at a permanent top-level route (/notes/) instead of the
-  // default /apps/<slug>/ page — see src/pages/apps/[slug].astro's
-  // TOP_LEVEL_ROUTE_APP_IDS. This keeps every existing /apps/notes/ link
-  // (cards, search results, sitemap) working by forwarding to the real page.
+  // OpenNotes and OpenBudget ship at permanent top-level routes (/notes/,
+  // /budget/) instead of the default /apps/<slug>/ page — see
+  // src/pages/apps/[slug].astro's TOP_LEVEL_ROUTE_APP_IDS. This keeps every
+  // existing /apps/<slug>/ link (cards, search results, sitemap) working by
+  // forwarding to the real page.
   redirects: {
     "/apps/notes": "/notes",
+    "/apps/budget": "/budget",
   },
   // Static output + the Cloudflare adapter together means: prerender
   // everything (no SSR), but still emit the thin Worker entry Cloudflare's

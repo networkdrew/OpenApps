@@ -20,6 +20,7 @@ const componentLoaders: Record<
 > = {
   "kanban-board": lazy(() => import("@/islands/kanban-board/KanbanBoardApp")),
   notes: lazy(() => import("@/islands/notes/NotesApp")),
+  budget: lazy(() => import("@/islands/budget/BudgetApp")),
 };
 
 export function getAppIslandIds(): string[] {

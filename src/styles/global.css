@@ -251,3 +251,51 @@
     margin: 0.6em 0;
   }
 }
+
+/* OpenBudget chart/status color tokens, scoped so they don't leak into the
+   general design system — values are the dataviz-skill validated 8-slot
+   categorical palette (fixed order, never cycled past 8) plus a reserved
+   good/warning/critical status triple for budget-meter severity. Both
+   modes were run through the palette validator against this site's actual
+   surface colors (see docs/local-data-standard.md's OpenBudget entry). */
+.budget-app {
+  --cat-blue: #2a78d6;
+  --cat-orange: #eb6834;
+  --cat-aqua: #1baf7a;
+  --cat-yellow: #eda100;
+  --cat-magenta: #e87ba4;
+  --cat-green: #008300;
+  --cat-violet: #4a3aa7;
+  --cat-red: #e34948;
+  --status-good: #0ca30c;
+  --status-warning: #d68000;
+  --status-critical: #d03b3b;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .budget-app {
+    --cat-blue: #3987e5;
+    --cat-orange: #d95926;
+    --cat-aqua: #199e70;
+    --cat-yellow: #c98500;
+    --cat-magenta: #d55181;
+    --cat-green: #008300;
+    --cat-violet: #9085e9;
+    --cat-red: #e66767;
+    --status-good: #0ca30c;
+    --status-warning: #fab219;
+    --status-critical: #e66767;
+  }
+}
+:root[data-theme="dark"] .budget-app {
+  --cat-blue: #3987e5;
+  --cat-orange: #d95926;
+  --cat-aqua: #199e70;
+  --cat-yellow: #c98500;
+  --cat-magenta: #d55181;
+  --cat-green: #008300;
+  --cat-violet: #9085e9;
+  --cat-red: #e66767;
+  --status-good: #0ca30c;
+  --status-warning: #fab219;
+  --status-critical: #e66767;
+}

@@ -92,6 +92,41 @@ describe("searchApps — descriptive and intent queries for OpenNotes", () => {
   });
 });
 
+describe("searchApps — descriptive and intent queries for OpenBudget", () => {
+  it.each([
+    "track monthly spending",
+    "free Mint alternative",
+    "personal budget without bank login",
+    "manage bills offline",
+    "budget app with no account",
+  ])('finds OpenBudget for "%s"', (query) => {
+    expect(topId(query)).toBe("budget");
+  });
+
+  it("ranks an exact name match first", () => {
+    const results = searchApps("OpenBudget");
+    expect(results[0]?.app.id).toBe("budget");
+  });
+
+  it("tolerates a common misspelling", () => {
+    expect(topId("buget tracker")).toBe("budget");
+  });
+
+  it("matches a reworded use case via word coverage", () => {
+    expect(topId("saving for an emergency fund")).toBe("budget");
+  });
+
+  it("matches replacement-for terms", () => {
+    expect(topId("alternative to YNAB")).toBe("budget");
+  });
+
+  it("matches problems-solved phrasing", () => {
+    expect(topId("not wanting to link a bank account to a budgeting app")).toBe(
+      "budget",
+    );
+  });
+});
+
 describe("getSuggestions — no-result fallback", () => {
   it("suggests featured apps when nothing matches at all", () => {
     const suggestions = getSuggestions("aquarium fish tank simulator");

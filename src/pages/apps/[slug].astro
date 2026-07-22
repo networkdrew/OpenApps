@@ -7,12 +7,13 @@ import AppWorkspaceLayout from "@/layouts/AppWorkspaceLayout.astro";
 import AppIslandLoader from "@/components/react/AppIslandLoader";
 
 // Apps that live at their own permanent top-level route (see
-// src/pages/notes/index.astro) instead of the default /apps/<slug>/ page.
-// astro.config.mjs redirects /apps/<slug> to that route so every existing
-// link (cards, search, sitemap) still resolves.
+// src/pages/notes/index.astro and src/pages/budget/index.astro) instead of
+// the default /apps/<slug>/ page. astro.config.mjs redirects /apps/<slug>
+// to that route so every existing link (cards, search, sitemap) still
+// resolves.
 export const getStaticPaths: GetStaticPaths = () =>
   apps
-    .filter((app) => app.id !== "notes")
+    .filter((app) => app.id !== "notes" && app.id !== "budget")
     .map((app) => ({ params: { slug: app.slug }, props: { app } }));
 
 interface Props {
