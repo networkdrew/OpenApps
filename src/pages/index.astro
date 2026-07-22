@@ -1,0 +1,108 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/config/site";
+import { categories } from "@/lib/apps/categories";
+import { getFeaturedApps, getRecentApps } from "@/lib/apps/registry";
+import { SearchPalette } from "@/components/react/SearchPalette";
+import CategoryCard from "@/components/astro/CategoryCard.astro";
+import AppCard from "@/components/astro/AppCard.astro";
+import Icon from "@/components/astro/Icon.astro";
+
+const featured = getFeaturedApps();
+const recent = getRecentApps(4);
+---
+
+<BaseLayout title={SITE_NAME} description={SITE_DESCRIPTION} path="/">
+  <section class="border-border bg-bg border-b">
+    <div class="mx-auto max-w-2xl px-4 py-8 text-center sm:px-6 sm:py-10">
+      <h1 class="text-text text-2xl font-bold sm:text-3xl">{SITE_TAGLINE}</h1>
+      <div class="mx-auto mt-4 max-w-md">
+        <SearchPalette client:load />
+      </div>
+      <p class="text-text-muted mx-auto mt-3 max-w-lg text-sm">
+        Search by what you need, not just a name — try “free Trello alternative”
+        or “organize work into columns.” No accounts, no tracking, your data
+        stays on your device.
+      </p>
+    </div>
+  </section>
+
+  {
+    featured.length > 0 && (
+      <section
+        aria-labelledby="featured-heading"
+        class="mx-auto max-w-6xl px-4 py-12 sm:px-6"
+      >
+        <h2 id="featured-heading" class="text-text text-lg font-semibold">
+          Featured apps
+        </h2>
+        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((app) => (
+            <AppCard app={app} />
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    recent.length > 0 && (
+      <section
+        aria-labelledby="recent-heading"
+        class="border-border bg-bg-elevated border-t"
+      >
+        <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+          <div class="flex items-center justify-between">
+            <h2 id="recent-heading" class="text-text text-lg font-semibold">
+              Recently added
+            </h2>
+            <a href="/apps/" class="text-accent text-sm hover:underline">
+              View all →
+            </a>
+          </div>
+          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {recent.map((app) => (
+              <AppCard app={app} variant="compact" />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <section
+    id="categories"
+    aria-labelledby="categories-heading"
+    class="mx-auto max-w-6xl px-4 py-12 sm:px-6"
+  >
+    <h2 id="categories-heading" class="text-text text-lg font-semibold">
+      Browse by category
+    </h2>
+    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {categories.map((category) => <CategoryCard category={category} />)}
+    </div>
+  </section>
+
+  <section
+    aria-labelledby="privacy-heading"
+    class="border-border bg-bg-elevated border-t"
+  >
+    <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
+      <h2
+        id="privacy-heading"
+        class="text-text flex items-center gap-2 text-lg font-semibold"
+      >
+        <Icon name="shield-check" class="text-success h-5 w-5" />
+        Local-first, by default
+      </h2>
+      <p class="text-text-muted mt-3">
+        Every app's page states exactly how it stores your data and whether it
+        works offline. Most apps here keep everything in your browser — no
+        account, no server, no tracking — and let you export a full backup or
+        delete everything permanently whenever you want. If an app ever needs
+        something from outside your device, its page says so explicitly before
+        you use it.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,22 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { AppDirectory } from "@/components/react/AppDirectory";
+---
+
+<BaseLayout
+  title="All apps"
+  description="Browse and search every free, privacy-first app, filterable by category, app type, privacy, and offline support."
+  path="/apps/"
+>
+  <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+    <h1 class="text-text text-2xl font-bold sm:text-3xl">All apps</h1>
+    <p class="text-text-muted mt-2 max-w-2xl">
+      Search or filter to find what you need. Every app's page states exactly
+      how it handles your data.
+    </p>
+
+    <div class="mt-8">
+      <AppDirectory client:load />
+    </div>
+  </div>
+</BaseLayout>

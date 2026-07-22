@@ -1,0 +1,28 @@
+---
+import type { AppMeta } from "@/lib/apps/schema";
+import AppCard from "./AppCard.astro";
+
+interface Props {
+  apps: AppMeta[];
+}
+
+const { apps } = Astro.props;
+---
+
+{
+  apps.length > 0 && (
+    <section aria-labelledby="related-apps-heading" class="flex flex-col gap-3">
+      <h2
+        id="related-apps-heading"
+        class="text-text-muted text-sm font-semibold tracking-wide uppercase"
+      >
+        Related apps
+      </h2>
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {apps.map((app) => (
+          <AppCard app={app} variant="compact" />
+        ))}
+      </div>
+    </section>
+  )
+}

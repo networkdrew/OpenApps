@@ -1,0 +1,36 @@
+---
+import type { GetStaticPaths } from "astro";
+import { apps, getComponentId } from "@/lib/apps/registry";
+import { SITE_URL } from "@/lib/config/site";
+import type { AppMeta } from "@/lib/apps/schema";
+import AppLayout from "@/layouts/AppLayout.astro";
+import AppIslandLoader from "@/components/react/AppIslandLoader";
+
+export const getStaticPaths: GetStaticPaths = () =>
+  apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+
+interface Props {
+  app: AppMeta;
+}
+
+const { app } = Astro.props;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: app.name,
+  description: app.seo.description ?? app.shortDescription,
+  url: `${SITE_URL}/apps/${app.slug}/`,
+  applicationCategory: "WebApplication",
+  operatingSystem: "Any (runs in a web browser)",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+};
+---
+
+<AppLayout app={app} structuredData={structuredData}>
+  <AppIslandLoader componentId={getComponentId(app)} client:load />
+</AppLayout>
