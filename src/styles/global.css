@@ -140,3 +140,114 @@
     scrollbar-width: none;
   }
 }
+
+/* OpenNotes' rendered Markdown preview (dangerouslySetInnerHTML output from
+   renderMarkdown) — Tailwind's preflight strips default heading/emphasis/list
+   styling, so this restores it, scoped to the preview area only. */
+.notes-preview {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    line-height: 1.25;
+    margin-top: 1em;
+    margin-bottom: 0.4em;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  h2 {
+    font-size: 1.3em;
+  }
+  h3 {
+    font-size: 1.15em;
+  }
+  h4,
+  h5,
+  h6 {
+    font-size: 1em;
+  }
+  p {
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+  }
+  strong {
+    font-weight: 700;
+  }
+  em {
+    font-style: italic;
+  }
+  ul,
+  ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-left: 1.5em;
+  }
+  ul {
+    list-style-type: disc;
+  }
+  ol {
+    list-style-type: decimal;
+  }
+  li {
+    margin-top: 0.15em;
+  }
+  li.task-list-item {
+    list-style: none;
+    margin-left: -1.5em;
+    padding-left: 1.5em;
+  }
+  li.task-list-item input {
+    margin-right: 0.4em;
+  }
+  blockquote {
+    border-left: 3px solid var(--color-border-strong);
+    padding-left: 0.9em;
+    margin: 0.6em 0;
+    color: var(--color-text-muted);
+  }
+  code {
+    font-family: var(--font-mono);
+    background-color: var(--color-bg-sunken);
+    border-radius: 0.25em;
+    padding: 0.1em 0.35em;
+    font-size: 0.9em;
+  }
+  pre {
+    background-color: var(--color-bg-sunken);
+    border-radius: 0.5em;
+    padding: 0.75em 1em;
+    overflow-x: auto;
+    margin: 0.6em 0;
+  }
+  pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 1.2em 0;
+  }
+  a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  a.wiki-link {
+    text-decoration: none;
+    border-bottom: 1px solid var(--color-accent);
+  }
+  a.wiki-link-missing {
+    color: var(--color-text-muted);
+    border-bottom: 1px dashed var(--color-text-muted);
+  }
+  img {
+    max-width: 100%;
+    border-radius: 0.5em;
+    margin: 0.6em 0;
+  }
+}

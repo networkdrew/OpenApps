@@ -19,6 +19,7 @@ const componentLoaders: Record<
   ComponentType<Record<string, unknown>>
 > = {
   "kanban-board": lazy(() => import("@/islands/kanban-board/KanbanBoardApp")),
+  notes: lazy(() => import("@/islands/notes/NotesApp")),
 };
 
 export function getAppIslandIds(): string[] {

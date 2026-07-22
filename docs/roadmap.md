@@ -2,6 +2,10 @@
 
 A lightweight, honest list — not a commitment with dates. See `docs/adding-an-app.md` for how new apps get added.
 
+## Shipped (v0.2)
+
+- **OpenNotes** (`notes-writing` category, permanent route `/notes/`) — a fully local-first Evernote/Notion-style note app: notebooks with nested folders, cross-notebook tags, favorites, pinning, archive, and a recoverable trash. Markdown editor with a formatting toolbar, edit/split/preview modes, `[[wiki links]]` with automatic backlinks (click a missing link to create that note on the spot), built-in and custom templates, instant full-text search, sorting, keyboard shortcuts, undo/redo, autosave, JSON backup/restore, Markdown export (single note or all notes), and complete local-data deletion. Domain logic (`src/lib/apps-logic/notes/`) is fully unit-tested (markdown rendering, wiki-link/backlink resolution, reducer, search, filters) separately from the UI (`src/islands/notes/`).
+
 ## Shipped (v0.1 — foundation)
 
 - Site shell: header/footer, responsive nav, theme switcher, Cmd/Ctrl+K command search, skip link.
@@ -19,7 +23,6 @@ A lightweight, honest list — not a commitment with dates. See `docs/adding-an-
 
 Candidates from the product brief, roughly in likely-value order — pick the next one via `docs/adding-an-app.md`:
 
-- **Notes app** (`notes-writing` category) — a local-first note editor/organizer; a real alternative to Notion/Evernote for simple note-taking.
 - **Habit/routine tracker** (`productivity`) — daily habit tracking with streaks, local-only.
 - **Pomodoro / focus timer** (`productivity` or `utilities`) — simple, no-account timer app; a free alternative to paid focus-timer apps.
 - **Simple drawing/whiteboard app** (`creative-design`) — canvas-based sketching with local save/export, a lightweight Excalidraw-style alternative.

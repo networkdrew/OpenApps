@@ -57,6 +57,41 @@ describe("searchApps — descriptive and intent queries", () => {
   });
 });
 
+describe("searchApps — descriptive and intent queries for OpenNotes", () => {
+  it.each([
+    "write private notes offline",
+    "free Evernote alternative",
+    "link personal knowledge pages",
+    "markdown editor with live preview",
+    "notes app with no account",
+  ])('finds OpenNotes for "%s"', (query) => {
+    expect(topId(query)).toBe("notes");
+  });
+
+  it("ranks an exact name match first", () => {
+    const results = searchApps("OpenNotes");
+    expect(results[0]?.app.id).toBe("notes");
+  });
+
+  it("tolerates a common misspelling of Evernote", () => {
+    expect(topId("evernot alternative")).toBe("notes");
+  });
+
+  it("matches a reworded use case via word coverage", () => {
+    expect(topId("somewhere to keep a daily journal")).toBe("notes");
+  });
+
+  it("matches replacement-for terms", () => {
+    expect(topId("alternative to Notion for notes")).toBe("notes");
+  });
+
+  it("matches problems-solved phrasing", () => {
+    expect(
+      topId("wanting a private notebook without creating an account"),
+    ).toBe("notes");
+  });
+});
+
 describe("getSuggestions — no-result fallback", () => {
   it("suggests featured apps when nothing matches at all", () => {
     const suggestions = getSuggestions("aquarium fish tank simulator");

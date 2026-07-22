@@ -13,9 +13,11 @@ import AppShell, {
 interface Props {
   app: AppMeta;
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  /** Overrides the canonical path — only needed for an app served at a permanent top-level route instead of the default /apps/<slug>/ page. */
+  path?: string;
 }
 
-const { app, structuredData } = Astro.props;
+const { app, structuredData, path = `/apps/${app.slug}/` } = Astro.props;
 const category = getCategory(app.categoryId);
 const related = getRelatedApps(app);
 ---
@@ -23,7 +25,7 @@ const related = getRelatedApps(app);
 <BaseLayout
   title={app.name}
   description={app.seo.description ?? app.shortDescription}
-  path={`/apps/${app.slug}/`}
+  path={path}
   structuredData={structuredData}
   shell
 >

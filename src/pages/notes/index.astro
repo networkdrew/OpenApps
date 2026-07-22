@@ -1,0 +1,33 @@
+---
+import { getAppById, getComponentId } from "@/lib/apps/registry";
+import { SITE_URL } from "@/lib/config/site";
+import AppWorkspaceLayout from "@/layouts/AppWorkspaceLayout.astro";
+import AppIslandLoader from "@/components/react/AppIslandLoader";
+
+// OpenNotes ships at this permanent top-level route rather than the default
+// /apps/<slug>/ page every other app uses (see [slug].astro's
+// TOP_LEVEL_ROUTE_APP_IDS) — its registry entry (id/slug "notes") remains
+// the single source of truth for its metadata; this page only decides where
+// it's served.
+const app = getAppById("notes");
+if (!app) throw new Error("Registry is missing the 'notes' app entry");
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: app.name,
+  description: app.seo.description ?? app.shortDescription,
+  url: `${SITE_URL}/notes/`,
+  applicationCategory: "WebApplication",
+  operatingSystem: "Any (runs in a web browser)",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+};
+---
+
+<AppWorkspaceLayout app={app} structuredData={structuredData} path="/notes/">
+  <AppIslandLoader componentId={getComponentId(app)} client:load />
+</AppWorkspaceLayout>

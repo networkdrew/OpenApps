@@ -20,6 +20,13 @@ const rawCategories = [
       "Plan, organize, and track work — boards, lists, and project tools.",
     icon: "layout-grid",
   },
+  {
+    id: "notes-writing",
+    name: "Notes & Writing",
+    description:
+      "Capture, organize, and link your own notes and writing — notebooks, folders, and Markdown editors.",
+    icon: "notebook",
+  },
 ] as const satisfies readonly Category[];
 
 export const categories: readonly Category[] = rawCategories.map((c) =>
