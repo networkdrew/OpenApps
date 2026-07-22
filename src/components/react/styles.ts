@@ -28,3 +28,7 @@ export const labelText = "text-sm font-medium text-text";
 
 export const badge =
   "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase";
+
+/** Pins an app's own primary toolbar to the top of its scrollable content region — reusable by any workspace app. */
+export const stickyToolbar =
+  "border-border bg-bg/95 sticky top-0 z-10 border-b px-4 py-3 backdrop-blur sm:px-6";

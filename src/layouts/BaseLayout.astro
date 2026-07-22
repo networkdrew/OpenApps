@@ -13,9 +13,16 @@ interface Props {
   path: string;
   /** Arbitrary JSON-LD object(s) to embed for this page. */
   structuredData?: Record<string, unknown> | Record<string, unknown>[];
+  /**
+   * Chromeless, viewport-filling mode for app workspace pages: no site
+   * Header/Footer, body pinned to the viewport height instead of scrolling
+   * as a normal document. The page's own content (the app shell) owns all
+   * layout and scrolling from there. Head/SEO output is unchanged either way.
+   */
+  shell?: boolean;
 }
 
-const { title, description, path, structuredData } = Astro.props;
+const { title, description, path, structuredData, shell = false } = Astro.props;
 
 const canonicalUrl = new URL(path, Astro.site).toString();
 const pageTitle = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
@@ -30,7 +37,10 @@ const jsonLdBlocks = structuredData
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
@@ -67,12 +77,16 @@ const jsonLdBlocks = structuredData
 
     <script is:inline set:html={themeInitScript} />
   </head>
-  <body class="bg-bg text-text flex min-h-svh flex-col">
+  <body
+    class={shell
+      ? "bg-bg text-text h-svh overflow-hidden"
+      : "bg-bg text-text flex min-h-svh flex-col"}
+  >
     <SkipLink />
-    <Header />
-    <main id="main-content" class="flex-1">
+    {!shell && <Header />}
+    <main id="main-content" class={shell ? "h-full" : "flex-1"}>
       <slot />
     </main>
-    <Footer />
+    {!shell && <Footer />}
   </body>
 </html>

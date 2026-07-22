@@ -63,6 +63,13 @@ export function BoardToolbar({
 }: BoardToolbarProps) {
   const [newColumnTitle, setNewColumnTitle] = useState("");
   const [showDataPanel, setShowDataPanel] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+
+  const activeFilterCount =
+    (filters.query ? 1 : 0) +
+    (filters.priority ? 1 : 0) +
+    (filters.overdueOnly ? 1 : 0) +
+    (filters.labelIds?.length ?? 0);
 
   return (
     <div className="flex flex-col gap-3">
@@ -106,6 +113,23 @@ export function BoardToolbar({
           Delete board
         </button>
 
+        {activeBoard && (
+          <button
+            type="button"
+            onClick={() => setShowFilters((v) => !v)}
+            aria-expanded={showFilters}
+            className={buttonGhost}
+          >
+            <Icon name="search" className="h-4 w-4" />
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="bg-accent text-accent-contrast inline-flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+        )}
+
         <div className="ml-auto flex items-center gap-1">
           <button
             type="button"
@@ -129,7 +153,35 @@ export function BoardToolbar({
       </div>
 
       {activeBoard && (
-        <div className="flex flex-wrap items-center gap-2">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const trimmed = newColumnTitle.trim();
+            if (!trimmed) return;
+            onAddColumn(trimmed);
+            setNewColumnTitle("");
+          }}
+          className="flex items-center gap-2"
+        >
+          <label htmlFor="new-column-title" className="sr-only">
+            New column name
+          </label>
+          <input
+            id="new-column-title"
+            value={newColumnTitle}
+            onChange={(e) => setNewColumnTitle(e.target.value)}
+            placeholder="New column…"
+            className={`${textField} max-w-40`}
+          />
+          <button type="submit" className={buttonSecondary}>
+            <Icon name="plus" className="h-4 w-4" />
+            Column
+          </button>
+        </form>
+      )}
+
+      {activeBoard && showFilters && (
+        <div className="border-border bg-bg-sunken flex flex-wrap items-center gap-2 rounded-md border p-3">
           <label htmlFor="card-search" className="sr-only">
             Search cards
           </label>
@@ -209,32 +261,6 @@ export function BoardToolbar({
               })}
             </div>
           )}
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const trimmed = newColumnTitle.trim();
-              if (!trimmed) return;
-              onAddColumn(trimmed);
-              setNewColumnTitle("");
-            }}
-            className="ml-auto flex items-center gap-2"
-          >
-            <label htmlFor="new-column-title" className="sr-only">
-              New column name
-            </label>
-            <input
-              id="new-column-title"
-              value={newColumnTitle}
-              onChange={(e) => setNewColumnTitle(e.target.value)}
-              placeholder="New column…"
-              className={`${textField} max-w-40`}
-            />
-            <button type="submit" className={buttonSecondary}>
-              <Icon name="plus" className="h-4 w-4" />
-              Column
-            </button>
-          </form>
         </div>
       )}
 

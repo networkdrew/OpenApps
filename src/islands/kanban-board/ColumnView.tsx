@@ -75,7 +75,7 @@ export function ColumnView({
   return (
     <div
       ref={(el) => registerColumn(column.id, el)}
-      className="bg-bg-sunken flex w-72 shrink-0 flex-col gap-3 rounded-lg p-3"
+      className="bg-bg-sunken flex h-full w-72 shrink-0 snap-start flex-col gap-3 rounded-lg p-3"
     >
       <div className="flex items-center justify-between gap-2">
         {renaming ? (
@@ -117,7 +117,7 @@ export function ColumnView({
       </div>
 
       <div
-        className="flex flex-col gap-2"
+        className="no-scrollbar flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto"
         role="list"
         aria-label={`${column.title} cards`}
       >

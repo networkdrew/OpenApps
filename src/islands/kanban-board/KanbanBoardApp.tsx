@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useKanbanController } from "./useKanbanController";
 import { useKanbanDnd } from "./useKanbanDnd";
 import { ColumnView } from "./ColumnView";
@@ -6,7 +6,11 @@ import { CardEditorDialog } from "./CardEditorDialog";
 import { BoardToolbar } from "./BoardToolbar";
 import { ConfirmDialog } from "@/components/react/ConfirmDialog";
 import { StatusMessage } from "@/components/react/StatusMessage";
-import { buttonPrimary } from "@/components/react/styles";
+import {
+  buttonPrimary,
+  iconButton,
+  stickyToolbar,
+} from "@/components/react/styles";
 import Icon from "@/components/react/Icon";
 import { filterBoard, type CardFilters } from "@/lib/apps-logic/kanban/filter";
 import {
@@ -32,6 +36,8 @@ export default function KanbanBoardApp() {
     text: string;
   } | null>(null);
   const [refreshToken, setRefreshToken] = useState(0);
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [visibleColumnIndex, setVisibleColumnIndex] = useState(0);
 
   const {
     state,
@@ -152,62 +158,104 @@ export default function KanbanBoardApp() {
   const editingCard =
     activeBoard && editingCardId ? activeBoard.cards[editingCardId] : undefined;
 
+  const columnCount = activeBoard?.columns.length ?? 0;
+
+  function scrollToColumn(index: number) {
+    const container = scrollerRef.current;
+    if (!container) return;
+    const target = container.children[index] as HTMLElement | undefined;
+    target?.scrollIntoView({
+      behavior: "smooth",
+      inline: "start",
+      block: "nearest",
+    });
+  }
+
+  useEffect(() => {
+    const container = scrollerRef.current;
+    if (!container) return;
+
+    function updateVisibleColumn() {
+      const children = Array.from(container!.children) as HTMLElement[];
+      let closest = 0;
+      let closestDistance = Infinity;
+      children.forEach((child, index) => {
+        const distance = Math.abs(child.offsetLeft - container!.scrollLeft);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closest = index;
+        }
+      });
+      setVisibleColumnIndex(closest);
+    }
+
+    updateVisibleColumn();
+    container.addEventListener("scroll", updateVisibleColumn, {
+      passive: true,
+    });
+    return () => container.removeEventListener("scroll", updateVisibleColumn);
+  }, [activeBoard?.id, columnCount]);
+
   if (!loaded) {
     return <p className="text-text-muted text-sm">Loading your boards…</p>;
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex h-full min-h-0 flex-col">
       {importMessage && (
-        <StatusMessage
-          tone={importMessage.tone === "error" ? "error" : "success"}
-        >
-          {importMessage.text}
-        </StatusMessage>
+        <div className="px-4 pt-3 sm:px-6">
+          <StatusMessage
+            tone={importMessage.tone === "error" ? "error" : "success"}
+          >
+            {importMessage.text}
+          </StatusMessage>
+        </div>
       )}
 
-      <BoardToolbar
-        boards={state.boards}
-        activeBoard={activeBoard}
-        onSelectBoard={(id) =>
-          dispatch({ type: "SET_ACTIVE_BOARD", boardId: id })
-        }
-        onNewBoard={() =>
-          dispatch({
-            type: "ADD_BOARD",
-            name: `Board ${state.boards.length + 1}`,
-          })
-        }
-        onDuplicateBoard={() => {
-          if (!activeBoard) return;
-          dispatch({
-            type: "DUPLICATE_BOARD",
-            boardId: activeBoard.id,
-            name: `${activeBoard.name} (copy)`,
-          });
-        }}
-        onDeleteBoard={() => setPendingConfirm({ type: "delete-board" })}
-        onAddColumn={(title) => {
-          if (!activeBoard) return;
-          dispatch({ type: "ADD_COLUMN", boardId: activeBoard.id, title });
-        }}
-        filters={filters}
-        onFiltersChange={setFilters}
-        canUndo={canUndo}
-        canRedo={canRedo}
-        onUndo={undo}
-        onRedo={redo}
-        onExport={handleExport}
-        onImportFile={handleImportFile}
-        onClearAll={() => setPendingConfirm({ type: "clear-all" })}
-        autosave={autosave}
-        autosaveError={autosaveError}
-        storageKey={STORAGE_KEY}
-        refreshToken={refreshToken}
-      />
+      <div className={stickyToolbar}>
+        <BoardToolbar
+          boards={state.boards}
+          activeBoard={activeBoard}
+          onSelectBoard={(id) =>
+            dispatch({ type: "SET_ACTIVE_BOARD", boardId: id })
+          }
+          onNewBoard={() =>
+            dispatch({
+              type: "ADD_BOARD",
+              name: `Board ${state.boards.length + 1}`,
+            })
+          }
+          onDuplicateBoard={() => {
+            if (!activeBoard) return;
+            dispatch({
+              type: "DUPLICATE_BOARD",
+              boardId: activeBoard.id,
+              name: `${activeBoard.name} (copy)`,
+            });
+          }}
+          onDeleteBoard={() => setPendingConfirm({ type: "delete-board" })}
+          onAddColumn={(title) => {
+            if (!activeBoard) return;
+            dispatch({ type: "ADD_COLUMN", boardId: activeBoard.id, title });
+          }}
+          filters={filters}
+          onFiltersChange={setFilters}
+          canUndo={canUndo}
+          canRedo={canRedo}
+          onUndo={undo}
+          onRedo={redo}
+          onExport={handleExport}
+          onImportFile={handleImportFile}
+          onClearAll={() => setPendingConfirm({ type: "clear-all" })}
+          autosave={autosave}
+          autosaveError={autosaveError}
+          storageKey={STORAGE_KEY}
+          refreshToken={refreshToken}
+        />
+      </div>
 
       {!activeBoard ? (
-        <div className="border-border flex flex-col items-center gap-3 rounded-lg border border-dashed py-16 text-center">
+        <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 overflow-y-auto px-4 py-16 text-center sm:px-6">
           <Icon name="kanban" className="text-text-muted h-8 w-8" />
           <p className="text-text">
             {state.boards.length === 0
@@ -226,46 +274,77 @@ export default function KanbanBoardApp() {
           </button>
         </div>
       ) : (
-        <div className="no-scrollbar flex gap-4 overflow-x-auto pb-2">
-          {activeBoard.columns.map((column) => (
-            <ColumnView
-              key={column.id}
-              column={column}
-              visibleCardIds={visibleCardsByColumn[column.id] ?? []}
-              totalCardCount={column.cardIds.length}
-              cardsById={activeBoard.cards}
-              labels={activeBoard.labels}
-              dragState={dragState}
-              registerCard={registerCard}
-              registerColumn={registerColumn}
-              cardHandleProps={cardHandleProps}
-              onAddCard={(title) =>
-                dispatch({
-                  type: "ADD_CARD",
-                  boardId: activeBoard.id,
-                  columnId: column.id,
-                  title,
-                })
-              }
-              onRenameColumn={(title) =>
-                dispatch({
-                  type: "RENAME_COLUMN",
-                  boardId: activeBoard.id,
-                  columnId: column.id,
-                  title,
-                })
-              }
-              onDeleteColumn={() =>
-                dispatch({
-                  type: "DELETE_COLUMN",
-                  boardId: activeBoard.id,
-                  columnId: column.id,
-                })
-              }
-              onOpenCardEditor={setEditingCardId}
-              onKeyboardMoveCard={handleKeyboardMove}
-            />
-          ))}
+        <div className="flex min-h-0 flex-1 flex-col">
+          {columnCount > 1 && (
+            <div className="border-border bg-bg flex items-center justify-between gap-2 border-b px-4 py-2 sm:hidden">
+              <button
+                type="button"
+                onClick={() => scrollToColumn(visibleColumnIndex - 1)}
+                disabled={visibleColumnIndex <= 0}
+                aria-label="Previous column"
+                className={iconButton}
+              >
+                <Icon name="chevron-left" className="h-4 w-4" />
+              </button>
+              <span className="text-text-muted text-xs">
+                {activeBoard.columns[visibleColumnIndex]?.title ?? ""} · Column{" "}
+                {visibleColumnIndex + 1} of {columnCount}
+              </span>
+              <button
+                type="button"
+                onClick={() => scrollToColumn(visibleColumnIndex + 1)}
+                disabled={visibleColumnIndex >= columnCount - 1}
+                aria-label="Next column"
+                className={iconButton}
+              >
+                <Icon name="chevron-right" className="h-4 w-4" />
+              </button>
+            </div>
+          )}
+          <div
+            ref={scrollerRef}
+            className="no-scrollbar flex min-h-0 flex-1 snap-x snap-mandatory gap-4 overflow-x-auto px-4 py-3 sm:snap-none sm:px-6"
+          >
+            {activeBoard.columns.map((column) => (
+              <ColumnView
+                key={column.id}
+                column={column}
+                visibleCardIds={visibleCardsByColumn[column.id] ?? []}
+                totalCardCount={column.cardIds.length}
+                cardsById={activeBoard.cards}
+                labels={activeBoard.labels}
+                dragState={dragState}
+                registerCard={registerCard}
+                registerColumn={registerColumn}
+                cardHandleProps={cardHandleProps}
+                onAddCard={(title) =>
+                  dispatch({
+                    type: "ADD_CARD",
+                    boardId: activeBoard.id,
+                    columnId: column.id,
+                    title,
+                  })
+                }
+                onRenameColumn={(title) =>
+                  dispatch({
+                    type: "RENAME_COLUMN",
+                    boardId: activeBoard.id,
+                    columnId: column.id,
+                    title,
+                  })
+                }
+                onDeleteColumn={() =>
+                  dispatch({
+                    type: "DELETE_COLUMN",
+                    boardId: activeBoard.id,
+                    columnId: column.id,
+                  })
+                }
+                onOpenCardEditor={setEditingCardId}
+                onKeyboardMoveCard={handleKeyboardMove}
+              />
+            ))}
+          </div>
         </div>
       )}
 

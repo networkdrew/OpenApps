@@ -3,7 +3,7 @@ import type { GetStaticPaths } from "astro";
 import { apps, getComponentId } from "@/lib/apps/registry";
 import { SITE_URL } from "@/lib/config/site";
 import type { AppMeta } from "@/lib/apps/schema";
-import AppLayout from "@/layouts/AppLayout.astro";
+import AppWorkspaceLayout from "@/layouts/AppWorkspaceLayout.astro";
 import AppIslandLoader from "@/components/react/AppIslandLoader";
 
 export const getStaticPaths: GetStaticPaths = () =>
@@ -31,6 +31,6 @@ const structuredData = {
 };
 ---
 
-<AppLayout app={app} structuredData={structuredData}>
+<AppWorkspaceLayout app={app} structuredData={structuredData}>
   <AppIslandLoader componentId={getComponentId(app)} client:load />
-</AppLayout>
+</AppWorkspaceLayout>
