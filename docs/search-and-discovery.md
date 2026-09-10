@@ -11,7 +11,7 @@ Search is a foundational requirement of this project, not a feature bolted on la
 | Field                             | Purpose                                                                                        | Example                                       |
 | --------------------------------- | ---------------------------------------------------------------------------------------------- | --------------------------------------------- |
 | `id`                              | Permanent internal id. Never reuse or repurpose.                                               | `kanban-board`                                |
-| `slug`                            | URL path segment under `/apps/`. Usually equals `id`.                                          | `kanban-board`                                |
+| `slug`                            | URL path segment at the site root (`/<slug>/`, not `/apps/<slug>/`). Usually equals `id`.      | `kanban-board`                                |
 | `componentId`                     | Optional override for the `AppIslandLoader` map key, if it must diverge from `id`.             | —                                             |
 | `name`                            | The app's actual name. Highest search weight.                                                  | `Kanban Board`                                |
 | `shortDescription`                | ≤160 chars, used as meta description and on cards.                                             | —                                             |

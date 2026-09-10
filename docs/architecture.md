@@ -51,7 +51,11 @@ See `docs/search-and-discovery.md` for the full picture. In short: `src/lib/apps
 
 ## Directory page: a deliberate SEO tradeoff
 
-The `/apps` directory's search and filtering are a client-rendered React island (`AppDirectory.tsx`), not a static + progressively-enhanced list. A crawler that doesn't execute JavaScript won't see the full app list _on that specific page_ — deliberate: every app has its own fully static, indexable page at `/apps/<slug>/`, every category page lists its apps with real `<a>` links, and the sitemap includes all of them directly. The directory page's job is being a fast, instant-feeling UX for real visitors; it doesn't need to also be the crawl path.
+The `/apps` directory's search and filtering are a client-rendered React island (`AppDirectory.tsx`), not a static + progressively-enhanced list. A crawler that doesn't execute JavaScript won't see the full app list _on that specific page_ — deliberate: every app has its own fully static, indexable page at `/<slug>/` (off the root — see the note below), every category page lists its apps with real `<a>` links, and the sitemap includes all of them directly. The directory page's job is being a fast, instant-feeling UX for real visitors; it doesn't need to also be the crawl path.
+
+## URL structure: individual apps live at the root
+
+Individual app pages are `src/pages/[slug].astro`, served at `/<slug>/` directly off `apps.drewcassidy.dev` — **not** `/apps/<slug>/`, which would repeat "apps" pointlessly given the subdomain is already `apps.*`. `/apps/` itself is a separate, static "browse all" listing page (`src/pages/apps/index.astro`) and is unaffected by this. Notes and Budget are the exception within the exception: they need extra surrounding page content, so they ship as their own static routes (`src/pages/notes/index.astro`, `src/pages/budget/index.astro`) rather than going through `[slug].astro` — `[slug].astro`'s `getStaticPaths` explicitly excludes them to avoid a route collision. Old `/apps/<slug>/` URLs still resolve via the `redirects` map built from the app registry in `astro.config.mjs`. When adding a new app, its page and every internal link to it should point at `/<slug>/`, not `/apps/<slug>/`.
 
 ## Local-first apps
 
