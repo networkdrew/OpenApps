@@ -44,8 +44,9 @@ export type Privacy = z.infer<typeof privacySchema>;
 export const appMetaSchema = z.object({
   /** Permanent internal identifier. Never reuse or repurpose after publishing. */
   id: z.string().regex(kebab, "id must be kebab-case"),
-  /** URL path segment under /apps/. Usually equal to id; kept distinct so an
-   *  app can be renamed for SEO without breaking its permanent id. */
+  /** URL path segment at the site root (/<slug>/, not /apps/<slug>/ — see
+   *  docs/architecture.md). Usually equal to id; kept distinct so an app can
+   *  be renamed for SEO without breaking its permanent id. */
   slug: z.string().regex(kebab, "slug must be kebab-case"),
   /** Key into AppIslandLoader's static import map. Defaults to `id` if omitted —
    *  only set this if the component key must diverge from the permanent id. */

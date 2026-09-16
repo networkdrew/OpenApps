@@ -162,7 +162,7 @@ export function AppDirectory() {
               {suggestions.apps.map((app) => (
                 <li key={app.id}>
                   <a
-                    href={`/apps/${app.slug}/`}
+                    href={`/${app.slug}/`}
                     className="text-accent text-sm hover:underline"
                   >
                     {app.name}
@@ -191,7 +191,7 @@ export function AppDirectory() {
             return (
               <li key={app.id}>
                 <a
-                  href={`/apps/${app.slug}/`}
+                  href={`/${app.slug}/`}
                   className="border-border bg-bg-elevated hover:border-accent flex h-full flex-col gap-2 rounded-lg border p-4 transition-colors"
                 >
                   <div className="flex items-center justify-between gap-2">

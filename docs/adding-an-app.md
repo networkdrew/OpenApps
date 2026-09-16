@@ -80,7 +80,7 @@ npm run build
 npx wrangler dev
 ```
 
-and in a real browser: the app's page renders at `/apps/<slug>/`, appears on `/apps/`, appears under its category page, the Cmd/Ctrl+K search palette finds it via at least one non-obvious descriptive query, its primary workflow actually works (create/edit/save/reload persists, export/import round-trips, any destructive action asks for confirmation), and it's usable on a narrow/touch viewport.
+and in a real browser: the app's page renders at `/<slug>/` (not `/apps/<slug>/` — see "URL structure" in `docs/architecture.md`), appears on `/apps/`, appears under its category page, the Cmd/Ctrl+K search palette finds it via at least one non-obvious descriptive query, its primary workflow actually works (create/edit/save/reload persists, export/import round-trips, any destructive action asks for confirmation), and it's usable on a narrow/touch viewport.
 
 ## 7. Update the roadmap
 

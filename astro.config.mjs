@@ -5,20 +5,23 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { SITE_URL } from "./src/lib/config/site.ts";
+import { apps } from "./src/lib/apps/registry.ts";
+
+// Individual app pages live at /<slug>/ off the root (see the "URL
+// structure" note in docs/architecture.md) — not /apps/<slug>/, which would
+// repeat "apps" pointlessly given the subdomain is already apps.*. This
+// keeps every old /apps/<slug>/ link (cards, search results, bookmarks)
+// working by forwarding to the real page. /apps/ itself (the "browse all"
+// listing page) is untouched — only individual app pages moved.
+const legacyAppRedirects = Object.fromEntries(
+  apps.map((app) => [`/apps/${app.slug}/`, `/${app.slug}/`]),
+);
 
 export default defineConfig({
   site: SITE_URL,
   output: "static",
   integrations: [react(), sitemap()],
-  // OpenNotes and OpenBudget ship at permanent top-level routes (/notes/,
-  // /budget/) instead of the default /apps/<slug>/ page — see
-  // src/pages/apps/[slug].astro's TOP_LEVEL_ROUTE_APP_IDS. This keeps every
-  // existing /apps/<slug>/ link (cards, search results, sitemap) working by
-  // forwarding to the real page.
-  redirects: {
-    "/apps/notes": "/notes",
-    "/apps/budget": "/budget",
-  },
+  redirects: legacyAppRedirects,
   // Static output + the Cloudflare adapter together means: prerender
   // everything (no SSR), but still emit the thin Worker entry Cloudflare's
   // Workers Static Assets deployment needs to serve dist/client (see

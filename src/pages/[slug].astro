@@ -6,11 +6,12 @@ import type { AppMeta } from "@/lib/apps/schema";
 import AppWorkspaceLayout from "@/layouts/AppWorkspaceLayout.astro";
 import AppIslandLoader from "@/components/react/AppIslandLoader";
 
-// Apps that live at their own permanent top-level route (see
-// src/pages/notes/index.astro and src/pages/budget/index.astro) instead of
-// the default /apps/<slug>/ page. astro.config.mjs redirects /apps/<slug>
-// to that route so every existing link (cards, search, sitemap) still
-// resolves.
+// Apps that live at their own permanent top-level route with extra
+// surrounding content (see src/pages/notes/index.astro and
+// src/pages/budget/index.astro) are excluded here so this dynamic route
+// doesn't collide with those static ones. Every other app is served
+// directly from this file at /<slug>/ — see docs/architecture.md's "URL
+// structure" note.
 export const getStaticPaths: GetStaticPaths = () =>
   apps
     .filter((app) => app.id !== "notes" && app.id !== "budget")
@@ -27,7 +28,7 @@ const structuredData = {
   "@type": "SoftwareApplication",
   name: app.name,
   description: app.seo.description ?? app.shortDescription,
-  url: `${SITE_URL}/apps/${app.slug}/`,
+  url: `${SITE_URL}/${app.slug}/`,
   applicationCategory: "WebApplication",
   operatingSystem: "Any (runs in a web browser)",
   offers: {
