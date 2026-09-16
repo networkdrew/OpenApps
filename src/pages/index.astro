@@ -1,108 +1,131 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/config/site";
-import { categories } from "@/lib/apps/categories";
-import { getFeaturedApps, getRecentApps } from "@/lib/apps/registry";
-import { SearchPalette } from "@/components/react/SearchPalette";
-import CategoryCard from "@/components/astro/CategoryCard.astro";
-import AppCard from "@/components/astro/AppCard.astro";
+import {
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  NAV_LINKS,
+} from "@/lib/config/site";
+import { apps } from "@/lib/apps/registry";
+import { ThemeToggle } from "@/components/react/ThemeToggle";
+import { Clock } from "@/components/react/Clock";
+import { DesktopDock } from "@/components/react/DesktopDock";
+import AppIcon from "@/components/astro/AppIcon.astro";
 import Icon from "@/components/astro/Icon.astro";
 
-const featured = getFeaturedApps();
-const recent = getRecentApps(4);
+const allApps = [...apps];
 ---
 
-<BaseLayout title={SITE_NAME} description={SITE_DESCRIPTION} path="/">
-  <section class="border-border bg-bg border-b">
-    <div class="mx-auto max-w-2xl px-4 py-8 text-center sm:px-6 sm:py-10">
-      <h1 class="text-text text-2xl font-bold sm:text-3xl">{SITE_TAGLINE}</h1>
-      <div class="mx-auto mt-4 max-w-md">
-        <SearchPalette client:load />
-      </div>
-      <p class="text-text-muted mx-auto mt-3 max-w-lg text-sm">
-        Search by what you need, not just a name — try “free Trello alternative”
-        or “organize work into columns.” No accounts, no tracking, your data
-        stays on your device.
-      </p>
-    </div>
-  </section>
+<BaseLayout title={SITE_NAME} description={SITE_DESCRIPTION} path="/" desktop>
+  <div class="desktop-wallpaper" aria-hidden="true"></div>
 
-  {
-    featured.length > 0 && (
-      <section
-        aria-labelledby="featured-heading"
-        class="mx-auto max-w-6xl px-4 py-12 sm:px-6"
-      >
-        <h2 id="featured-heading" class="text-text text-lg font-semibold">
-          Featured apps
-        </h2>
-        <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((app) => (
-            <AppCard app={app} />
-          ))}
-        </div>
-      </section>
-    )
-  }
+  <header
+    class="border-border bg-bg/70 relative z-40 border-b backdrop-blur-md"
+  >
+    <div class="flex items-center gap-4 px-4 py-2 sm:px-6">
+      <a href="/" class="text-text flex items-center gap-2 text-sm font-bold">
+        <span
+          class="bg-accent text-accent-contrast flex h-5 w-5 items-center justify-center rounded-[22%]"
+          aria-hidden="true"
+        >
+          <Icon name="layout-grid" class="h-3.5 w-3.5" />
+        </span>
+        {SITE_NAME}
+      </a>
 
-  {
-    recent.length > 0 && (
-      <section
-        aria-labelledby="recent-heading"
-        class="border-border bg-bg-elevated border-t"
-      >
-        <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-          <div class="flex items-center justify-between">
-            <h2 id="recent-heading" class="text-text text-lg font-semibold">
-              Recently added
-            </h2>
-            <a href="/apps/" class="text-accent text-sm hover:underline">
-              View all →
+      <nav aria-label="Primary" class="flex items-center gap-1">
+        {
+          NAV_LINKS.map((link) => (
+            <a
+              href={link.href}
+              class="text-text-muted hover:bg-bg-sunken hover:text-text rounded-md px-2 py-1 text-sm font-medium transition-colors"
+            >
+              {link.label}
             </a>
-          </div>
-          <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {recent.map((app) => (
-              <AppCard app={app} variant="compact" />
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
+          ))
+        }
+      </nav>
 
-  <section
-    id="categories"
-    aria-labelledby="categories-heading"
-    class="mx-auto max-w-6xl px-4 py-12 sm:px-6"
-  >
-    <h2 id="categories-heading" class="text-text text-lg font-semibold">
-      Browse by category
-    </h2>
-    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {categories.map((category) => <CategoryCard category={category} />)}
+      <div class="ml-auto flex items-center gap-2">
+        <Clock client:load />
+        <ThemeToggle client:only="react" />
+      </div>
     </div>
-  </section>
+  </header>
 
-  <section
-    aria-labelledby="privacy-heading"
-    class="border-border bg-bg-elevated border-t"
-  >
-    <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6">
-      <h2
-        id="privacy-heading"
-        class="text-text flex items-center gap-2 text-lg font-semibold"
-      >
-        <Icon name="shield-check" class="text-success h-5 w-5" />
-        Local-first, by default
-      </h2>
-      <p class="text-text-muted mt-3">
-        Every app's page states exactly how it stores your data and whether it
-        works offline. Most apps here keep everything in your browser — no
-        account, no server, no tracking — and let you export a full backup or
-        delete everything permanently whenever you want. If an app ever needs
-        something from outside your device, its page says so explicitly before
-        you use it.
+  <div class="desktop-area relative z-10 h-[calc(100svh-2.5rem)]">
+    <div class="mx-auto max-w-3xl px-6 pt-10 text-center sm:pt-16">
+      <h1 class="text-text text-3xl font-extrabold tracking-tight sm:text-4xl">
+        {SITE_TAGLINE}
+      </h1>
+      <p class="text-text-muted mx-auto mt-3 max-w-xl text-sm">
+        Pick an app to open it. No accounts, no tracking, nothing to download —
+        everything runs in your browser and your data stays on your device.
       </p>
     </div>
-  </section>
+
+    <div
+      class="mx-auto mt-10 grid max-w-3xl grid-cols-2 gap-4 px-6 sm:grid-cols-3 sm:gap-6"
+    >
+      {
+        allApps.map((app) => (
+          <a
+            href={`/apps/${app.slug}/`}
+            class="group flex flex-col items-center gap-2"
+          >
+            <span class="transition-transform duration-150 ease-out group-hover:-translate-y-1 group-hover:scale-105">
+              <AppIcon app={app} class="h-20 w-20 sm:h-24 sm:w-24" />
+            </span>
+            <span class="desktop-label text-text text-sm font-medium">
+              {app.name}
+            </span>
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="text-text-muted mx-auto mt-8 pb-32 text-center text-xs">
+      Tip: press <kbd
+        class="border-border text-text rounded border px-1.5 py-0.5">Ctrl</kbd
+      >
+      <kbd class="border-border text-text rounded border px-1.5 py-0.5">K</kbd>{
+        " "
+      }
+      anywhere to search.
+    </p>
+  </div>
+
+  <DesktopDock apps={allApps} client:load />
 </BaseLayout>
+
+<style>
+  .desktop-wallpaper {
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(
+        120% 90% at 15% 0%,
+        color-mix(in srgb, var(--color-accent) 16%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        110% 90% at 100% 100%,
+        color-mix(in srgb, #6366f1 18%, transparent),
+        transparent 55%
+      ),
+      radial-gradient(
+        90% 80% at 85% 10%,
+        color-mix(in srgb, #10b981 12%, transparent),
+        transparent 50%
+      ),
+      var(--color-bg);
+  }
+
+  .desktop-area {
+    overflow-y: auto;
+  }
+
+  .desktop-label {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.35);
+  }
+</style>

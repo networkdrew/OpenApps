@@ -2,6 +2,10 @@
 
 A lightweight, honest list — not a commitment with dates. See `docs/adding-an-app.md` for how new apps get added.
 
+## Shipped (v0.4)
+
+- **Desktop OS-style landing page** — the `/` homepage is now a full-screen desktop: a wallpaper backdrop, a grid of app icons (each with its own gradient tile + lucide icon), a menu bar with a live clock, and a bottom dock with a Cmd/Ctrl+K app-launcher command palette searched over the same index as the rest of the site. Every app gained an `appearance` field (icon + gradient) on the registry, with a category-icon/neutral-gradient fallback. See `docs/architecture.md` ("Desktop landing page").
+
 ## Shipped (v0.3)
 
 - **OpenBudget** (`productivity` category, permanent route `/budget/`) — a fully local-first Mint/YNAB-style personal budgeting app: accounts (checking, savings, credit card, cash, investment) with balances computed from a full transaction ledger; income, expense, and transfer transactions; built-in and custom categories; monthly budgets per category with progress meters and a "copy last month" shortcut; recurring transactions (bills, subscriptions, paychecks) that auto-generate on load with a hard iteration ceiling against corrupt data; savings goals with a contribution/withdrawal history; transaction search, filters, and sorting; a dashboard with an income-vs-expenses chart, a category spending breakdown, a balance-over-time trend, and budget check-ins; CSV import with column mapping and a sign-convention toggle; CSV and JSON export; full JSON backup/restore; undo/redo; autosave; and complete local-data deletion. All money is handled as integer cents (never floats) to avoid rounding bugs. Domain logic (`src/lib/apps-logic/budget/`) — money, dates/recurrence math, calculations, CSV parsing, filtering, the reducer — is fully unit-tested (413 tests project-wide) separately from the UI (`src/islands/budget/`).

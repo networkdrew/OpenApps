@@ -1,0 +1,28 @@
+---
+import type { AppMeta } from "@/lib/apps/schema";
+import { getCategory } from "@/lib/apps/categories";
+import Icon, { type IconName } from "./Icon.astro";
+
+interface Props {
+  app: AppMeta;
+  /** Tailwind classes for the tile size, e.g. "h-16 w-16". */
+  class?: string;
+}
+
+const { app, class: className = "h-16 w-16" } = Astro.props;
+const category = getCategory(app.categoryId);
+const iconName = (app.appearance?.icon ??
+  category?.icon ??
+  "layout-grid") as IconName;
+const gradient =
+  app.appearance?.gradient ??
+  "linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%)";
+---
+
+<span
+  class={`os-app-icon flex shrink-0 items-center justify-center rounded-[22%] ${className}`}
+  style={`background: ${gradient};`}
+  aria-hidden="true"
+>
+  <Icon name={iconName} class="h-[55%] w-[55%] text-white drop-shadow-sm" />
+</span>

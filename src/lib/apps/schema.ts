@@ -51,6 +51,15 @@ export const appMetaSchema = z.object({
    *  only set this if the component key must diverge from the permanent id. */
   componentId: z.string().regex(kebab).optional(),
 
+  /** Optional OS-launcher identity: a lucide icon name and a CSS gradient for
+   *  the app's tile. Falls back to the category icon + a neutral gradient. */
+  appearance: z
+    .object({
+      icon: z.string().min(1),
+      gradient: z.string().min(1),
+    })
+    .optional(),
+
   name: z.string().min(1),
   shortDescription: z.string().min(1).max(160),
   /** Paragraphs shown in the app page's intro. */

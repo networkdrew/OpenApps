@@ -139,6 +139,29 @@
   .no-scrollbar {
     scrollbar-width: none;
   }
+
+  /* OS-style launcher app tile (shared by the Astro AppIcon and the React
+     desktop dock/launcher): squircle with an inset highlight and a top gloss. */
+  .os-app-icon {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.35),
+      inset 0 -1px 0 rgb(0 0 0 / 0.15),
+      0 6px 16px -6px rgb(0 0 0 / 0.35);
+  }
+  .os-app-icon::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      rgb(255 255 255 / 0.28),
+      rgb(255 255 255 / 0) 45%
+    );
+  }
 }
 
 /* OpenNotes' rendered Markdown preview (dangerouslySetInnerHTML output from

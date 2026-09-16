@@ -20,9 +20,22 @@ interface Props {
    * layout and scrolling from there. Head/SEO output is unchanged either way.
    */
   shell?: boolean;
+  /**
+   * Immersive "desktop" mode for the landing page: hides the site Header and
+   * Footer and pins the body to the viewport so the page can lay out its own
+   * menu bar, desktop, and dock (like a real OS). Head/SEO output is unchanged.
+   */
+  desktop?: boolean;
 }
 
-const { title, description, path, structuredData, shell = false } = Astro.props;
+const {
+  title,
+  description,
+  path,
+  structuredData,
+  shell = false,
+  desktop = false,
+} = Astro.props;
 
 const canonicalUrl = new URL(path, Astro.site).toString();
 const pageTitle = title === SITE_NAME ? title : `${title} — ${SITE_NAME}`;
@@ -78,15 +91,17 @@ const jsonLdBlocks = structuredData
     <script is:inline set:html={themeInitScript} />
   </head>
   <body
-    class={shell
+    class={desktop
       ? "bg-bg text-text h-svh overflow-hidden"
-      : "bg-bg text-text flex min-h-svh flex-col"}
+      : shell
+        ? "bg-bg text-text h-svh overflow-hidden"
+        : "bg-bg text-text flex min-h-svh flex-col"}
   >
     <SkipLink />
-    {!shell && <Header />}
-    <main id="main-content" class={shell ? "h-full" : "flex-1"}>
+    {!shell && !desktop && <Header />}
+    <main id="main-content" class={shell || desktop ? "h-full" : "flex-1"}>
       <slot />
     </main>
-    {!shell && <Footer />}
+    {!shell && !desktop && <Footer />}
   </body>
 </html>

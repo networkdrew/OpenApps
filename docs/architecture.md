@@ -67,6 +67,29 @@ Paired React components in `src/components/react/`: `AutosaveIndicator`, `Storag
 
 The Kanban Board (`src/lib/apps-logic/kanban/`, `src/islands/kanban-board/`) is the reference implementation of all of the above — read it before building the next stateful app.
 
+## Desktop landing page
+
+The `/` homepage is a full-screen, OS-style desktop (`src/pages/index.astro`)
+rather than a conventional marketing page, in keeping with the search-first,
+no-decorative-hero principle. It renders through `BaseLayout`'s `desktop` prop
+(which hides the site Header/Footer and pins the body to the viewport) and lays
+out three layers:
+
+- a `desktop-wallpaper` backdrop plus a grid of app icons (server-rendered via
+  `astro/AppIcon.astro`, one per app, linking to its page),
+- a top menu-bar with the site name, nav, a live `Clock` (`react/Clock.tsx`,
+  `client:load`, updates every 30 s, `suppressHydrationWarning`), and the theme
+  toggle, and
+- a fixed bottom dock (`react/DesktopDock.tsx`) holding a launcher button plus
+  one icon per app.
+
+The dock's launcher is a command-palette dialog (Cmd/Ctrl+K, or the grid
+button) reused over the same `searchApps`/`getSuggestions` index as the whole
+site — it is not a separate search implementation. Every app tile is drawn from
+the new `appearance` field on `AppMeta` (`appearance.icon` lucide name +
+`appearance.gradient` CSS), falling back to the category icon and a neutral
+accent gradient via `react/AppIcon.tsx` / `astro/AppIcon.astro` (kept in sync).
+
 ## Theming
 
 Light/dark is driven by a `data-theme="light"|"dark"` attribute on `<html>`, read from `localStorage` by a small inline script in `BaseLayout`'s `<head>` (before first paint, so there's no flash). If nothing is stored, CSS falls back to `prefers-color-scheme`. `ThemeToggle.tsx` is mounted with `client:only="react"` since its initial state depends on `matchMedia`/`localStorage`, which don't exist during Astro's static render.

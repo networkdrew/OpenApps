@@ -12,6 +12,10 @@ const rawApps = [
     id: "kanban-board",
     slug: "kanban-board",
     name: "Kanban Board",
+    appearance: {
+      icon: "kanban",
+      gradient: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+    },
     shortDescription:
       "Organize work into boards, columns, and cards — a free, private Trello alternative that saves everything on your device.",
     description: [
@@ -152,6 +156,10 @@ const rawApps = [
     id: "notes",
     slug: "notes",
     name: "OpenNotes",
+    appearance: {
+      icon: "notebook",
+      gradient: "linear-gradient(135deg, #f59e0b 0%, #f97316 100%)",
+    },
     shortDescription:
       "Notebooks, folders, tags, and linked notes with Markdown and full-text search — a free, private Evernote alternative that saves everything on your device.",
     description: [
@@ -320,6 +328,10 @@ const rawApps = [
     id: "budget",
     slug: "budget",
     name: "OpenBudget",
+    appearance: {
+      icon: "piggy-bank",
+      gradient: "linear-gradient(135deg, #10b981 0%, #0ea5a9 100%)",
+    },
     shortDescription:
       "Accounts, budgets, recurring bills, and savings goals with real charts — a free, private Mint alternative that never connects to your bank.",
     description: [
