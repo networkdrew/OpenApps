@@ -130,7 +130,7 @@ export function DesktopDock({ apps }: Props) {
                   }}
                   role="option"
                   aria-selected={false}
-                  href={`/apps/${app.slug}/`}
+                  href={`/${app.slug}/`}
                   onKeyDown={(e) => onOptionKeyDown(e, index)}
                   className="hover:bg-bg-sunken focus:bg-bg-sunken flex items-center gap-3 rounded-xl p-2.5 text-sm focus:outline-none"
                 >
@@ -185,7 +185,7 @@ export function DesktopDock({ apps }: Props) {
         {apps.map((app) => (
           <a
             key={app.id}
-            href={`/apps/${app.slug}/`}
+            href={`/${app.slug}/`}
             aria-label={app.name}
             title={app.name}
             className="transition-transform duration-150 ease-out hover:-translate-y-2 hover:scale-125"

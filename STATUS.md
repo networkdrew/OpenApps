@@ -15,8 +15,8 @@ Last updated: 2026-09-16.
   `npm run test` (413 passed), `npm run build` (success). Browser-verified via
   the built output: header + live Clock, desktop app icons, the dock, the
   Cmd/Ctrl+K launcher (opens, searches, filters, keyboard-navigates, Esc
-  closes), and all three app pages plus the `/apps/notes` → `/notes` redirect —
-  no console errors.
+  closes), and all three app pages at their flat URLs (`/kanban-board/`,
+  `/notes/`, `/budget/`) — no console errors.
 - The desktop shell consists of: `src/components/react/DesktopDock.tsx` (fixed
   dock + app-launcher dialog), `src/components/react/Clock.tsx`, and
   `AppIcon` in both `astro/` and `react/`, plus a new `appearance` field
@@ -27,9 +27,8 @@ Last updated: 2026-09-16.
 
 ## What is next
 
-The desktop homepage work is done but **not yet committed**. Also not yet done:
-the roadmap's next app candidates, in order — `docs/adding-an-app.md` is the
-recipe:
+The desktop homepage work is done and committed. Next: the roadmap's next app
+candidates, in order — `docs/adding-an-app.md` is the recipe:
 
 1. **Habit/routine tracker** (`productivity`) — daily habits with streaks, local-only.
 2. **Pomodoro / focus timer** (`productivity` | `utilities`).
@@ -62,10 +61,13 @@ do not re-attempt to "fix" the dev server.
 - **`AppIcon` exists twice on purpose** — `astro/` for SSR (desktop icons on the
   index page) and `react/` for client islands (inside the launcher). They must
   stay in sync; the gradient/icon fallback logic is identical in both.
-- **OpenNotes and OpenBudget live at top-level routes** (`/notes/`, `/budget/`),
-  not `/apps/<slug>/`; `astro.config.mjs` `redirects` forward the old URLs, and
-  `[slug].astro`'s `getStaticPaths` filters those two out. Keep `slug` and `id`
-  as separate fields for this reason.
+- **App URLs are flat at the site root** — `/<slug>/`, not `/apps/<slug>/`
+  (the `apps.*` subdomain already says "apps"). `astro.config.mjs` generates the
+  legacy `/apps/<slug>/` → `/<slug>/` redirect map from the registry, so any new
+  app gets the redirect automatically. `src/pages/[slug].astro` excludes `notes`
+  and `budget`, which keep their own dedicated top-level files. Keep `slug` and
+  `id` as separate fields for this reason. This is a change that landed via
+  merge (commit `72df55f`) — do not reintroduce `/apps/<slug>/` links.
 - **The launcher is Cmd/Ctrl+K** (matches the header's old SearchPalette
   convention) and also reachable from the dock's grid button.
 
