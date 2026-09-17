@@ -78,10 +78,6 @@ export default function AppShell({ app, children }: AppShellProps) {
           <Icon name="home" className="h-4 w-4" />
           Home
         </a>
-        <a href="/apps/" className={navLink}>
-          <Icon name="layout-grid" className="h-4 w-4" />
-          All apps
-        </a>
       </div>
       <div className="flex flex-col gap-1">
         <p className="text-text-muted px-2 text-xs font-semibold tracking-wide uppercase">

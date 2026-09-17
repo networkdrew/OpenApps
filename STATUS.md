@@ -70,14 +70,17 @@ do not re-attempt to "fix" the dev server.
   merge (commit `72df55f`) — do not reintroduce `/apps/<slug>/` links.
 - **The launcher is Cmd/Ctrl+K** (matches the header's old SearchPalette
   convention) and also reachable from the dock's grid button.
+- **The `/apps` "all apps" directory page was removed.** The homepage desktop
+  is now the sole app store. `astro.config.mjs` redirects `/apps/` (and
+  `/apps`) to `/`; the legacy `/apps/<slug>/` → `/<slug>/` map is unchanged.
+  `AppDirectory.tsx` and `src/lib/apps/filters.ts` were deleted as dead code.
+  `NAV_LINKS` is now a single "All apps" link to `/`.
 
 ## Deliberately not done
 
 - No mobile-specific layout for the desktop landing page beyond the existing
   responsive desktop-icon grid (`index.astro`) — the dock and launcher are
   already responsive; revisit only if a real device shows a problem.
-- Did not add the desktop shell to the header's old `SearchPalette`/directory
-  search paths — those remain on `/apps` and the app pages, unchanged.
 
 ## Commands
 

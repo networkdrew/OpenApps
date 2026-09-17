@@ -49,11 +49,7 @@ Search is a foundational requirement of this project, not a feature bolted on la
 3. **Fuse.js fuzzy index**: every field is indexed with a weight (name highest, then aliases/misspellings, then the "intent" fields — `tasksPerformed`/`problemsSolved`/`descriptivePhrases` — then `useCases`/`replacesProducts`/`tags`, then looser prose fields last). This is what gives typo tolerance and ranks exact-ish matches above incidental ones.
 4. **Word-coverage layer**: for multi-word queries, a second pass scores how many significant query words (stopwords excluded) appear anywhere across an app's metadata. This is what catches a _reworded_ query — e.g. "somewhere to plan a wedding" — that Fuse's single-pattern fuzzy match alone might score too low, as long as the registry's `useCases`/`tasksPerformed`/etc. contain the relevant words somewhere.
 5. **Reasons**: `reasonsFromMatches` turns Fuse's raw match data into up to three human-readable `{ label, value }` reasons (e.g. `{ label: "Solves this", value: "losing track of what stage a task is in" }`), shown in the UI as "Matched: …".
-6. **Suggestions** (`getSuggestions`): when a search returns nothing, first retries with a relaxed threshold; if still nothing, falls back to featured apps with an explanatory message. The directory and search palette both use this so there's never a dead end.
-
-## Filters (`src/lib/apps/filters.ts`)
-
-Orthogonal to search: `categoryId`, `appType`, `storageMode`, `dataLeavesDevice`, `offlineCapable`. Used by `AppDirectory.tsx`'s pill buttons, composable with an active search query.
+6. **Suggestions** (`getSuggestions`): when a search returns nothing, first retries with a relaxed threshold; if still nothing, falls back to featured apps with an explanatory message. The search palette and the desktop launcher both use this so there's never a dead end.
 
 ## Testing search behavior
 

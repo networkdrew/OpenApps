@@ -17,7 +17,4 @@ export const SITE_URL = "https://apps.drewcassidy.dev";
 
 export const GITHUB_URL: string | undefined = undefined;
 
-export const NAV_LINKS = [
-  { label: "All apps", href: "/apps" },
-  { label: "Categories", href: "/apps#categories" },
-] as const;
+export const NAV_LINKS = [{ label: "All apps", href: "/" }] as const;
